@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+        <meta charset="utf-8">
+        <title>Mão na Massa</title>
+        <style>
+            textarea, input {
+                width: 100%;
+                background-color: black;
+                color: #20c20e;
+                font-family: Courier New, Courier, monospace;
+                font-size: 1.2em;
+                margin: 10px 0;
+                border: none;
+            }
+
+            input[type="text"], textarea {
+                border: 1px solid #20c20e;
+            }
+
+            input[type="submit"] {
+                background-color: #20c20e;
+                color: black;
+                margin-bottom: 20px;
+            }
+            body {
+                width: 100%;
+                font-family: Courier New, Courier, monospace;
+                background-color: black;
+                color: #20c20e;
+                margin: 0;
+            }
+            ul {
+                list-style-type: none;
+                margin: 0;
+            }
+
+            .container {
+                max-width: 90vw;
+                margin: 0 auto;
+            }
+        </style>
+
+    </head>
+    <body>
+        <div class="container">
+            <h1>Envie sua mensagem!</h1>
+
+            <form method="post" action="/messages">
+                <input type="text" name="nickname" placeholder="Apelido">
+                <textarea name="text" rows="6" placeholder="Mensagem"></textarea><br />
+                <input type="submit" value="Enviar">
+            </form>
+
+            <ul id="messages-container"></ul>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+                integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+                crossorigin="anonymous">
+        </script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                setInterval(function() {
+                    $.getJSON('/messages')
+                        .then(function(messages) {
+                            var reverseMessages = messages.reverse()
+                            $('#messages-container').html('');
+                            reverseMessages.forEach(function(message) {
+                                $('#messages-container').append('<li> <strong>[' + message.created_at +']</strong> (' + message.nickname + ') ' + message.text + '</li>');
+                            })
+                        });
+                }, 1000);
+
+                $('form').on('submit', function(event) {
+                    var form = $(event.target);
+                    var textarea = form.find('textarea');
+                    var nickname = form.find('input[name="nickname"]');
+                    var data = {
+                        text: textarea.val(),
+                        nickname: nickname.val(),
+                    }
+                    textarea.val('');
+                    $.post('/messages', data, 'application/json');
+                    event.preventDefault();
+                });
+            });
+        </script>
+    </body>
+</html>
