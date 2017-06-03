@@ -8,5 +8,5 @@
 1. `hug -f server.py`
 
 ## Exposing the server to the world
-1. npm install -g localtunnel
-2. lt --port 8000
+1. `npm install -g localtunnel`
+1. `lt --port 8000`
