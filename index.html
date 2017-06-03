@@ -68,7 +68,8 @@
                             var reverseMessages = messages.reverse()
                             $('#messages-container').html('');
                             reverseMessages.forEach(function(message) {
-                                $('#messages-container').append('<li> <strong>[' + message.created_at +']</strong> (' + message.nickname + ') ' + message.text + '</li>');
+                                var text = message.text.replace('<', '&lt;').replace('&gt;', ')');
+                                $('#messages-container').append('<li> <strong>[' + message.created_at +']</strong> (' + message.nickname + ') ' + text + '</li>');
                             })
                         });
                 }, 1000);
